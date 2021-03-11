@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<head>
+    <title>Player List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript">
+        function validate_servername() {
+            var inp = document.forms["servername_form"]["servername"].value;
+
+            if (!inp.match('')) {
+                alert("Please enter a proper server host and port. Example: fivem.example.org:30120 OR 127.0.0.1:30120");
+                return false;
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <style type="text/css">
+        table.pure-table {
+            width: 100%;
+            background-color: #FFFFFF;
+            border-collapse: collapse;
+            border-width: 2px;
+            border-color: #ffd900;
+            border-style: solid;
+            color: #000000;
+        }
+
+        table.pure-table td, table.pure-table th {
+            border-color: #ffd900;
+        }
+
+        table.pure-table thead {
+            background-color: #ffd900;
+        }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <table class="pure-table">
+        <thead>
+            <tr>
+                <td>
+                    <form class="pure-form" name="servername_form" action="{{url_for('main')}}" onsubmit="return validate_servername()" method="POST">
+                        <input class="pure-input-rounded" name="servername" type="text" placeholder="Enter server address">
+                        <button class="pure-button pure-button-primary">Go!</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="center"><img src="data:image/png;base64,{{info['icon']}}"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="center" title="Online Players"><i class='fas fa-user-alt'></i> {{len}}/{{info['vars']['sv_maxClients']}}</div>
+                </td>
+            </tr>
+        </thead>
+    </table>
+    <table class="pure-table pure-table-horizontal">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Identifiers</td>
+                <td>Ping</td>
+            </tr>
+        </thead>
+
+        {%for i in range(0, len)%}
+        <tr>
+            <td>{{players[i]['id']}}</td>
+            <td>{{players[i]['name']}}</td>
+            <td>
+                {%for k in players[i]['identifiers']%}
+                    {%if 'ip:' not in k%}
+                        {{k}}<br>
+                    {%endif%}
+                {%endfor%}
+            </td>
+            <td>{{players[i]['ping']}}</td>
+        </tr>
+        {%endfor%}
+    </table>
+</body>
+</html>
